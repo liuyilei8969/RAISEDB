@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAISE - RBP Activity Inference</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e63946', // RAISE主题色（红色系）
+                        secondary: '#457b9d',
+                        accent: '#1d3557',
+                        light: '#f1faee',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-accent">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <!-- 顶部ICON和标题 -->
+            <div class="flex items-center space-x-4">
+                <img id="header-icon" src="data/ICON.png" alt="RAISE Icon" class="h-12 w-auto object-contain" />
+                <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-primary">RAISE</h1>
+            </div>
+
+            <!-- 桌面端导航 -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-secondary hover:text-primary font-medium transition-colors">Home</a>
+                <a href="#about" class="text-secondary hover:text-primary font-medium transition-colors">About</a>
+                <a href="#search" class="text-secondary hover:text-primary font-medium transition-colors">Search</a>
+                <a href="#contact" class="text-secondary hover:text-primary font-medium transition-colors">Contact</a>
+            </nav>
+
+            <!-- 移动端菜单按钮 -->
+            <button id="mobile-menu-btn" class="md:hidden text-secondary hover:text-primary text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#home" class="py-2 text-secondary hover:text-primary font-medium transition-colors">Home</a>
+                <a href="#about" class="py-2 text-secondary hover:text-primary font-medium transition-colors">About</a>
+                <a href="#search" class="py-2 text-secondary hover:text-primary font-medium transition-colors">Search</a>
+                <a href="#contact" class="py-2 text-secondary hover:text-primary font-medium transition-colors">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Home板块 -->
+        <section id="home" class="mb-16 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-[clamp(1.8rem,4vw,2.8rem)] font-bold mb-6 text-accent text-shadow">
+                    RBP Activity Inference from Splicing Events
+                </h2>
+                <p class="text-lg text-secondary mb-10 leading-relaxed">
+                    A comprehensive resource for analyzing RNA Binding Protein (RBP) activity and their splicing events.
+                    Search by RBP or Gene Symbol to explore ΔPSI values, binding motifs, and regulatory relationships.
+                </p>
+                
+                <!-- 数据概览卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 card-hover">
+                        <div class="text-primary text-3xl mb-3"><i class="fa fa-database"></i></div>
+                        <h3 class="text-xl font-semibold mb-2">Curated Data</h3>
+                        <p class="text-secondary">Integrated RBP-gene interactions data from RAISEDB</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 card-hover">
+                        <div class="text-secondary text-3xl mb-3"><i class="fa fa-search"></i></div>
+                        <h3 class="text-xl font-semibold mb-2">Dual Search</h3>
+                        <p class="text-secondary">Search by RBP name or Gene Symbol</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 card-hover">
+                        <div class="text-accent text-3xl mb-3"><i class="fa fa-chart-line"></i></div>
+                        <h3 class="text-xl font-semibold mb-2">Activity Scores</h3>
+                        <p class="text-secondary">RBP activity inference from splicing events</p>
+                    </div>
+                </div>
+
+                <a href="#search" class="inline-block bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-lg transition-colors">
+                    Start Search <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- About板块 -->
+        <section id="about" class="mb-16">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-8 text-center">About RAISE</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6 md:p-8 mb-8">
+                    <!-- About图片 -->
+                    <div class="mb-6">
+                        <img src="data/About.png" alt="RAISE Overview" class="w-full h-auto rounded-lg object-cover shadow-sm" />
+                    </div>
+
+                    <!-- About文本（从About.txt读取） -->
+                    <div id="about-content" class="prose max-w-none text-secondary leading-relaxed">
+                        <p class="text-center text-gray-500">Loading About content...</p>
+                        <!-- 内容将通过JavaScript从About.txt加载 -->
+                    </div>
+                </div>
+
+                <!-- 数据流程示意图 -->
+                <div class="bg-white rounded-lg shadow p-6 md:p-8">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Data Processing Pipeline</h3>
+                    <img src="data/Search.png" alt="RAISE Pipeline" class="w-full h-auto rounded-lg object-cover" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Search板块 -->
+        <section id="search" class="mb-16">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-8 text-center">Search RAISE Database</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6 md:p-8 mb-8">
+                    <!-- 搜索表单 -->
+                    <form id="search-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- RBP搜索框 -->
+                            <div>
+                                <label for="rbp-search" class="block text-secondary font-medium mb-2">Search by RBP</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary">
+                                        <i class="fa fa-protein"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        id="rbp-search" 
+                                        placeholder="e.g., PTBP1, HNRNPC" 
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Gene Symbol搜索框 -->
+                            <div>
+                                <label for="gene-search" class="block text-secondary font-medium mb-2">Search by Gene Symbol</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary">
+                                        <i class="fa fa-dna"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        id="gene-search" 
+                                        placeholder="e.g., SMAP1, USP33" 
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 搜索按钮 -->
+                        <div class="flex justify-center">
+                            <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-lg transition-colors">
+                                <i class="fa fa-search mr-2"></i> Search
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- 搜索提示 -->
+                    <div class="mt-6 text-center text-sm text-secondary">
+                        <p><i class="fa fa-info-circle mr-2"></i> Tip: Enter RBP name, Gene Symbol, or both for combined results</p>
+                    </div>
+                </div>
+
+                <!-- 搜索结果区域 -->
+                <div id="search-results" class="bg-white rounded-lg shadow p-6 md:p-8 hidden">
+                    <h3 class="text-xl font-semibold mb-6 flex items-center">
+                        <span id="result-count">0</span> Results Found
+                        <button id="clear-search" class="ml-auto text-secondary hover:text-primary transition-colors">
+                            <i class="fa fa-refresh mr-1"></i> Clear
+                        </button>
+                    </h3>
+
+                    <!-- 结果表格 -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">RBP</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Gene Symbol</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">ΔPSI</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">P-value</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Activity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- 结果将动态插入 -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 无结果提示 -->
+                    <div id="no-results" class="hidden text-center py-8 text-secondary">
+                        <i class="fa fa-search-minus text-4xl mb-4"></i>
+                        <p class="text-lg">No matching results found</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact板块 -->
+        <section id="contact" class="mb-16">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-8 text-center">Contact Us</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6 md:p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- 联系信息 -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-6">Get in Touch</h3>
+                            <div class="space-y-4 text-secondary">
+                                <div class="flex items-start">
+                                    <i class="fa fa-envelope text-primary text-xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium text-accent">Email</h4>
+                                        <p>raise-db@example.com</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa fa-github text-primary text-xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium text-accent">GitHub Repository</h4>
+                                        <a href="https://github.com/liuyilei8969/RAISEDB" target="_blank" class="text-primary hover:underline">
+                                            github.com/liuyilei8969/RAISEDB
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa fa-code-fork text-primary text-xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium text-accent">Data Source</h4>
+                                        <p>All data is available in the RAISEDB.txt file</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 联系表单 -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-6">Send Feedback</h3>
+                            <form id="contact-form" class="space-y-4">
+                                <div>
+                                    <label for="contact-name" class="block text-secondary font-medium mb-2">Your Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="contact-name" 
+                                        placeholder="Enter your name" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label for="contact-email" class="block text-secondary font-medium mb-2">Your Email</label>
+                                    <input 
+                                        type="email" 
+                                        id="contact-email" 
+                                        placeholder="Enter your email" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label for="contact-message" class="block text-secondary font-medium mb-2">Message</label>
+                                    <textarea 
+                                        id="contact-message" 
+                                        rows="4" 
+                                        placeholder="Report issues or suggest features" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-2 rounded-lg transition-colors">
+                                    Send Message <i class="fa fa-paper-plane ml-2"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-accent text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">RAISE</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        RBP Activity Inference from Splicing Events<br>
+                        A comprehensive database for RBP research
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#search" class="hover:text-white transition-colors">Search</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">GitHub</h3>
+                    <a href="https://github.com/liuyilei8969/RAISEDB" target="_blank" class="flex items-center text-gray-300 hover:text-white transition-colors">
+                        <i class="fa fa-github text-2xl mr-2"></i>
+                        <span>View on GitHub</span>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2025 RAISE Database. Hosted on GitHub Pages.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. 移动端菜单切换
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 2. 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    mobileMenu.classList.add('hidden'); // 关闭移动端菜单
+                }
+            });
+        });
+
+        // 3. 读取About.txt内容
+        fetch('data/About.txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load About content');
+                return response.text();
+            })
+            .then(text => {
+                const aboutContent = document.getElementById('about-content');
+                // 将文本转换为HTML段落（按换行分割）
+                aboutContent.innerHTML = text
+                    .split('\n')
+                    .filter(line => line.trim() !== '')
+                    .map(line => `<p class="mb-4">${line}</p>`)
+                    .join('');
+            })
+            .catch(error => {
+                document.getElementById('about-content').innerHTML = `
+                    <p class="text-red-500">Error loading About content: ${error.message}</p>
+                    <p>Please check if About.txt exists in the data folder.</p>
+                `;
+            });
+
+        // 4. 读取RAISEDB.txt并处理搜索
+        let databaseData = [];
+        const rbpSearchInput = document.getElementById('rbp-search');
+        const geneSearchInput = document.getElementById('gene-search');
+        const searchResults = document.getElementById('search-results');
+        const resultTableBody = document.getElementById('result-table-body');
+        const resultCount = document.getElementById('result-count');
+        const noResults = document.getElementById('no-results');
+
+        // 加载数据库文件
+        fetch('data/RAISEDB.txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load RAISEDB.txt');
+                return response.text();
+            })
+            .then(text => {
+                // 解析TSV/CSV数据（假设第一行为表头，后续为数据）
+                const lines = text.split('\n').filter(line => line.trim() !== '');
+                if (lines.length === 0) throw new Error('RAISEDB.txt is empty');
+                
+                // 假设表头为：RBP, GeneSymbol, ΔPSI, P, Activity...
+                const headers = lines[0].split(/\t|,/).map(h => h.trim());
+                
+                // 解析数据行
+                databaseData = lines.slice(1).map(line => {
+                    const values = line.split(/\t|,/).map(v => v.trim());
+                    const entry = {};
+                    headers.forEach((header, index) => {
+                        entry[header] = values[index] || '';
+                    });
+                    return entry;
+                });
+                console.log('RAISEDB loaded successfully:', databaseData.length, 'entries');
+            })
+            .catch(error => {
+                console.error('Database load error:', error);
+                // 在搜索区域显示错误提示
+                document.querySelector('#search-form').innerHTML = `
+                    <div class="text-center text-red-500 p-6">
+                        <i class="fa fa-exclamation-triangle text-2xl mb-2"></i>
+                        <p>Failed to load database: ${error.message}</p>
+                        <p>Please check if RAISEDB.txt exists in the data folder.</p>
+                    </div>
+                `;
+            });
+
+        // 搜索函数
+        const performSearch = () => {
+            if (databaseData.length === 0) {
+                alert('Database is still loading or unavailable. Please try again later.');
+                return;
+            }
+
+            const rbpQuery = rbpSearchInput.value.trim().toLowerCase();
+            const geneQuery = geneSearchInput.value.trim().toLowerCase();
+            
+            // 过滤数据
+            const filteredData = databaseData.filter(item => {
+                const rbpMatch = rbpQuery 
+                    ? item.RBP?.toLowerCase().includes(rbpQuery) || false 
+                    : true;
+                const geneMatch = geneQuery 
+                    ? item.GeneSymbol?.toLowerCase().includes(geneQuery) || false 
+                    : true;
+                return rbpMatch && geneMatch;
+            });
+
+            // 显示结果
+            searchResults.classList.remove('hidden');
+            resultTableBody.innerHTML = '';
+            resultCount.textContent = filteredData.length;
+
+            if (filteredData.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            // 填充表格
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${item.RBP || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.GeneSymbol || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.ΔPSI || item.DeltaPSI || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.P || item.Pvalue || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.Activity || '-'}</td>
+                `;
+                resultTableBody.appendChild(row);
+            });
+        };
+
+        // 搜索表单提交
+        document.getElementById('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            performSearch();
+        });
+
+        // 实时搜索
+        [rbpSearchInput, geneSearchInput].forEach(input => {
+            input.addEventListener('input', performSearch);
+        });
+
+        // 清空搜索
+        document.getElementById('clear-search').addEventListener('click', () => {
+            rbpSearchInput.value = '';
+            geneSearchInput.value = '';
+            searchResults.classList.add('hidden');
+        });
+
+        // 5. 联系表单提交
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your feedback! We appreciate your input.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
