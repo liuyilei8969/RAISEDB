@@ -44,7 +44,7 @@
     <!-- 顶部导航栏 -->
     <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <div class="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between">
-            <!-- 顶部ICON（进一步放大） -->
+            <!-- 顶部ICON（放大尺寸） -->
             <div class="flex items-center">
                 <img id="header-icon" src="data/ICON.png" alt="RAISE Icon" class="h-20 w-auto object-contain" />
             </div>
@@ -124,13 +124,19 @@
 
                             <div>
                                 <label for="gene-search" class="block text-accent font-medium mb-2">Search by Target Gene Symbol</label>
-                                <input 
-                                    type="text" 
-                                    id="gene-search" 
-                                    placeholder="e.g., MYL6, NDEL1" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
-                                    style="font-style: italic;"
-                                />
+                                <!-- 关键修改：使用HTML格式化占位符，仅基因名称斜体 -->
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        id="gene-search" 
+                                        placeholder="e.g., MYL6, NDEL1" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                    />
+                                    <!-- 用伪元素实现混合格式占位符 -->
+                                    <div id="gene-placeholder" class="pointer-events-none absolute left-4 top-3 text-gray-400">
+                                        e.g., <em>MYL6</em>, <em>NDEL1</em>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -324,11 +330,31 @@
                 `;
             });
 
+        // 基因搜索框占位符交互
+        const geneSearchInput = document.getElementById('gene-search');
+        const genePlaceholder = document.getElementById('gene-placeholder');
+        
+        // 初始状态显示自定义占位符
+        if (geneSearchInput.value === '') {
+            genePlaceholder.style.display = 'block';
+        }
+        
+        // 输入时隐藏自定义占位符
+        geneSearchInput.addEventListener('focus', () => {
+            genePlaceholder.style.display = 'none';
+        });
+        
+        // 失去焦点且为空时显示自定义占位符
+        geneSearchInput.addEventListener('blur', () => {
+            if (geneSearchInput.value === '') {
+                genePlaceholder.style.display = 'block';
+            }
+        });
+
         // 读取RAISEDB.txt并处理搜索
         let databaseData = [];
         let databaseHeaders = [];
         const rbpSearchInput = document.getElementById('rbp-search');
-        const geneSearchInput = document.getElementById('gene-search');
         const searchResults = document.getElementById('search-results');
         const resultTableHeader = document.getElementById('result-table-header');
         const resultTableBody = document.getElementById('result-table-body');
@@ -337,24 +363,3 @@
 
         fetch('data/RAISEDB.txt')
             .then(response => {
-                if (!response.ok) throw new Error('Failed to load RAISEDB.txt');
-                return response.text();
-            })
-            .then(text => {
-                const lines = text.split('\n').filter(line => line.trim() !== '');
-                if (lines.length === 0) throw new Error('RAISEDB.txt is empty');
-                
-                databaseHeaders = lines[0].split(/\t|,/).map(h => h.trim());
-                databaseData = lines.slice(1).map(line => {
-                    return line.split(/\t|,/).map(v => v.trim());
-                });
-                
-                console.log('RAISEDB loaded successfully:', databaseData.length, 'entries');
-            })
-            .catch(error => {
-                console.error('Database load error:', error);
-                document.querySelector('#search-form').innerHTML = `
-                    <div class="text-center text-red-500 p-6">
-                        <i class="fa fa-exclamation-triangle text-2xl mb-2"></i>
-                        <p>Failed to load database: ${error.message}</p>
-                        <p>Please check if R
