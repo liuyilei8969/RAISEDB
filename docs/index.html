@@ -44,9 +44,9 @@
     <!-- 顶部导航栏 -->
     <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <div class="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between">
-            <!-- 顶部ICON（放大且不显示RAISE文字） -->
+            <!-- 顶部ICON（进一步放大） -->
             <div class="flex items-center">
-                <img id="header-icon" src="data/ICON.png" alt="RAISE Icon" class="h-16 w-auto object-contain" />
+                <img id="header-icon" src="data/ICON.png" alt="RAISE Icon" class="h-20 w-auto object-contain" />
             </div>
 
             <!-- 桌面端导航 -->
@@ -78,7 +78,6 @@
         <!-- Home板块 -->
         <section id="home" class="mb-16 text-center">
             <div class="max-w-4xl mx-auto">
-                <!-- 图2：修改标题文字 -->
                 <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold mb-6 text-secondary">
                     RAISEDB
                 </h2>
@@ -86,9 +85,6 @@
                     A database of RBP (RNA-binding protein) splicing targets
                 </p>
                 
-                <!-- 图3：移除这部分内容 -->
-                
-                <!-- 保留空间分隔 -->
                 <div class="h-8"></div>
             </div>
         </section>
@@ -98,12 +94,10 @@
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-8 text-center text-secondary">About RAISEDB</h2>
                 
-                <!-- 图4：只放About.png，不添加标题 -->
                 <div class="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-8">
                     <img src="data/About.png" alt="About RAISEDB" class="w-full h-auto rounded shadow-sm" />
                 </div>
 
-                <!-- 从About.txt读取内容 -->
                 <div id="about-content" class="bg-white rounded-lg shadow-sm p-6 md:p-8 text-gray-700 leading-relaxed">
                     <p class="text-center text-gray-500">Loading About content...</p>
                 </div>
@@ -115,11 +109,9 @@
             <div class="max-w-5xl mx-auto">
                 <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-8 text-center text-secondary">Search RAISE Database</h2>
                 
-                <!-- 搜索表单 -->
                 <div class="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-8">
                     <form id="search-form" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- RBP搜索框 -->
                             <div>
                                 <label for="rbp-search" class="block text-accent font-medium mb-2">Search by RBP</label>
                                 <input 
@@ -130,21 +122,18 @@
                                 />
                             </div>
 
-                            <!-- 图5：修改基因搜索框标题和示例（斜体） -->
                             <div>
                                 <label for="gene-search" class="block text-accent font-medium mb-2">Search by Target Gene Symbol</label>
                                 <input 
                                     type="text" 
                                     id="gene-search" 
-                                    placeholder="e.g., <em>MYL6</em>, <em>NDEL1</em>" 
+                                    placeholder="e.g., MYL6, NDEL1" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
+                                    style="font-style: italic;"
                                 />
                             </div>
                         </div>
 
-                        <!-- 图5：移除tips -->
-                        
-                        <!-- 搜索按钮 -->
                         <div class="flex justify-center">
                             <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-lg transition-colors">
                                 <i class="fa fa-search mr-2"></i> Search
@@ -153,7 +142,6 @@
                     </form>
                 </div>
 
-                <!-- 搜索结果区域 -->
                 <div id="search-results" class="bg-white rounded-lg shadow-sm p-6 md:p-8 hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-semibold text-secondary">
@@ -164,7 +152,6 @@
                         </button>
                     </div>
 
-                    <!-- 图6：表格完全按原始数据显示，不做任何修改 -->
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead id="result-table-header" class="divide-y divide-gray-200">
@@ -176,7 +163,6 @@
                         </table>
                     </div>
 
-                    <!-- 无结果提示 -->
                     <div id="no-results" class="hidden text-center py-8 text-gray-500">
                         <i class="fa fa-search-minus text-4xl mb-4"></i>
                         <p class="text-lg">No matching results found</p>
@@ -192,7 +178,7 @@
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 md:p-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- 联系信息 -->
+                        <!-- 联系信息（更新邮箱） -->
                         <div>
                             <h3 class="text-xl font-semibold mb-6 text-secondary">Get in Touch</h3>
                             <div class="space-y-4 text-gray-700">
@@ -264,7 +250,6 @@
     <footer class="bg-secondary text-white py-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- 图7：修改页脚描述 -->
                 <div>
                     <h3 class="text-lg font-semibold mb-4">RAISEDB</h3>
                     <p class="text-gray-300 leading-relaxed">
@@ -295,14 +280,14 @@
     </footer>
 
     <script>
-        // 1. 移动端菜单切换
+        // 移动端菜单切换
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // 2. 平滑滚动
+        // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -313,12 +298,12 @@
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    mobileMenu.classList.add('hidden'); // 关闭移动端菜单
+                    mobileMenu.classList.add('hidden');
                 }
             });
         });
 
-        // 3. 读取About.txt内容
+        // 读取About.txt内容
         fetch('data/About.txt')
             .then(response => {
                 if (!response.ok) throw new Error('Failed to load About content');
@@ -326,7 +311,6 @@
             })
             .then(text => {
                 const aboutContent = document.getElementById('about-content');
-                // 保留原始文本格式（按换行分割）
                 aboutContent.innerHTML = text
                     .split('\n')
                     .filter(line => line.trim() !== '')
@@ -340,7 +324,7 @@
                 `;
             });
 
-        // 4. 读取RAISEDB.txt并处理搜索（完全保留原始数据格式）
+        // 读取RAISEDB.txt并处理搜索
         let databaseData = [];
         let databaseHeaders = [];
         const rbpSearchInput = document.getElementById('rbp-search');
@@ -351,21 +335,16 @@
         const resultCount = document.getElementById('result-count');
         const noResults = document.getElementById('no-results');
 
-        // 加载数据库文件（完全保留原始格式）
         fetch('data/RAISEDB.txt')
             .then(response => {
                 if (!response.ok) throw new Error('Failed to load RAISEDB.txt');
                 return response.text();
             })
             .then(text => {
-                // 解析数据（保留原始结构）
                 const lines = text.split('\n').filter(line => line.trim() !== '');
                 if (lines.length === 0) throw new Error('RAISEDB.txt is empty');
                 
-                // 读取表头（第一行）
                 databaseHeaders = lines[0].split(/\t|,/).map(h => h.trim());
-                
-                // 读取数据行
                 databaseData = lines.slice(1).map(line => {
                     return line.split(/\t|,/).map(v => v.trim());
                 });
@@ -378,103 +357,4 @@
                     <div class="text-center text-red-500 p-6">
                         <i class="fa fa-exclamation-triangle text-2xl mb-2"></i>
                         <p>Failed to load database: ${error.message}</p>
-                        <p>Please check if RAISEDB.txt exists in the data folder.</p>
-                    </div>
-                `;
-            });
-
-        // 搜索函数（完全按原始数据显示）
-        const performSearch = () => {
-            if (databaseData.length === 0 || databaseHeaders.length === 0) {
-                alert('Database is still loading or unavailable. Please try again later.');
-                return;
-            }
-
-            const rbpQuery = rbpSearchInput.value.trim().toLowerCase();
-            const geneQuery = geneSearchInput.value.trim().toLowerCase();
-            
-            // 过滤数据（尝试匹配第一列RBP和第二列Gene）
-            const filteredData = databaseData.filter(row => {
-                const rbpMatch = rbpQuery 
-                    ? row[0]?.toLowerCase().includes(rbpQuery) || false 
-                    : true;
-                const geneMatch = geneQuery 
-                    ? row[1]?.toLowerCase().includes(geneQuery) || false 
-                    : true;
-                return rbpMatch && geneMatch;
-            });
-
-            // 显示结果
-            searchResults.classList.remove('hidden');
-            resultTableBody.innerHTML = '';
-            resultCount.textContent = filteredData.length;
-
-            // 生成表头（完全按原始数据）
-            resultTableHeader.innerHTML = databaseHeaders
-                .map(header => `<th class="table-header">${header}</th>`)
-                .join('');
-
-            if (filteredData.length === 0) {
-                noResults.classList.remove('hidden');
-                return;
-            }
-            noResults.classList.add('hidden');
-
-            // 填充表格（完全按原始数据行显示）
-            filteredData.forEach(row => {
-                const tableRow = document.createElement('tr');
-                tableRow.className = 'hover:bg-gray-50 transition-colors';
-                tableRow.innerHTML = row
-                    .map(cell => `<td class="table-cell">${cell || '-'}</td>`)
-                    .join('');
-                resultTableBody.appendChild(tableRow);
-            });
-        };
-
-        // 搜索表单提交
-        document.getElementById('search-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            performSearch();
-        });
-
-        // 实时搜索
-        [rbpSearchInput, geneSearchInput].forEach(input => {
-            input.addEventListener('input', performSearch);
-        });
-
-        // 清空搜索
-        document.getElementById('clear-search').addEventListener('click', () => {
-            rbpSearchInput.value = '';
-            geneSearchInput.value = '';
-            searchResults.classList.add('hidden');
-        });
-
-        // 5. 联系表单提交
-        document.getElementById('contact-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Thank you for your feedback! We appreciate your input.');
-            e.target.reset();
-        });
-
-        // 初始化基因搜索框的斜体示例
-        document.addEventListener('DOMContentLoaded', () => {
-            const geneInput = document.getElementById('gene-search');
-            geneInput.placeholder = 'e.g., MYL6, NDEL1';
-            // 使用JavaScript设置斜体样式
-            geneInput.style.fontStyle = 'italic';
-            geneInput.addEventListener('focus', () => {
-                if (geneInput.value === '') {
-                    geneInput.style.fontStyle = 'italic';
-                }
-            });
-            geneInput.addEventListener('input', () => {
-                if (geneInput.value !== '') {
-                    geneInput.style.fontStyle = 'normal';
-                } else {
-                    geneInput.style.fontStyle = 'italic';
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+                        <p>Please check if R
