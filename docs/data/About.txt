@@ -1,4 +1,3 @@
-About RAISE
 RAISEDB is a database of RNA-binding protein (RBP) splicing targets identified by a novel algorithm RAISE we developed.  
 RAISE (RBP Activity Inference from Splicing Events), a robust and interpretable frameworks that integrate multimodal transcriptomic evidence to dynamically achieve cross-omics inference of RBP activity.  
 RAISE consists of three sequential components. First, we identify RBP targets by integrating binding evidence and splicing changes into a probabilistic model. Second, we construct an RBP–exon regulatory network, where edges represent the strength and direction of regulation. Finally, we infer RBP activity in new samples by applying ridge regression to the observed splicing changes, guided by the structure of the pre-constructed network. In this model, each splicing change is assumed to result from a linear combination of RBPs.
