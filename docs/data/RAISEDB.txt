@@ -1,4 +1,4 @@
-RBP	Gene Symbol	Chromesome	Strand	Exon Start	Exon End	Upstream Exon Start	Upstream Exon End	Downstream Exon Start	Downstream Exon End	ΔPSI	Upstream Motif Presence	Exon Motif Presence	Downstream Motif Presence	Upstream CLIP-seq Peak Presence	Exon CLIP-seq Peak Presence	Downstream CLIP-seq Peak Presence
+RBP	Gene Symbol	Chromesome	Strand	Exon Start	Exon End	Upstream Exon Start	Upstream Exon End	Downstream Exon Start	Downstream Exon End	ΔPSI (ENCODE KD)	Upstream Motif Presence	Exon Motif Presence	Downstream Motif Presence	Upstream CLIP-seq Peak Presence	Exon CLIP-seq Peak Presence	Downstream CLIP-seq Peak Presence
 HNRNPM	USP33	chr1	-	78212083	78212241	78211105	78211284	78225327	78225374	0.966	×	×	×	×	√	×
 HNRNPM	AC003002.6	chr19	+	57904168	57904316	57901251	57901482	57905555	57905591	0.94	×	×	×	×	×	×
 PTBP1	SMAP1	chr6	+	71501391	71501472	71483052	71483128	71508359	71508440	0.903	√	×	×	×	×	×
